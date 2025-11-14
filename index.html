@@ -104,8 +104,8 @@
         background: transparent;
         border: none;
         cursor: pointer;
-        padding: 4px;
-        font-size: 22px;
+        /*padding: 4px;*/
+        font-size: 19px;
         opacity: 0.3!important;
         transition: opacity 0.2s!important;
       }
@@ -124,6 +124,81 @@
       }
     /* ========== Скрытый режим ========== */
 
+    /* ========== Пресеты ========== */
+      .preset-buttons {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* Группа кнопок одной фразы */
+      .preset-item {
+        display: inline-flex;
+        margin: 4px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+      }
+
+      /* Общий стиль всех кнопок в preset-item */
+      .preset-item button {
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        background: #fff;
+        transition: 0.2s;
+      }
+
+      /* Главная кнопка воспроизведения */
+      .preset-item button.play-btn {
+        background: #f0f0f0;
+        font-weight: 500;
+      }
+
+      /* Hover эффекты для action-кнопок */
+      .preset-item button.edit-btn:hover {
+        background: #d4e4ff;
+      }
+      .preset-item button.delete-btn:hover {
+        background: #ffd4d4;
+      }
+      .preset-item button.save-btn:hover {
+        background: #d4ffd4;
+      }
+      .preset-item button.cancel-btn:hover {
+        background: #ffe2e2;
+      }
+
+      /* Кнопка добавления новой фразы */
+      .preset-add-btn,
+      .add-btn {
+        margin-top: 10px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #aaa;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+
+      .add-btn:hover,
+      .preset-add-btn:hover {
+        background: #ebe6e6;
+      }
+
+      /* Поле ввода новой или редактируемой фразы */
+      #newPhraseInput,
+      .edit-input {
+        flex: 1;
+        padding: 6px 10px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #aaa;
+      }
+    /* ========== Пресеты ========== */
 
 
 
@@ -131,17 +206,27 @@
 </head>
 <body>
 
-  <p style="opacity: 0.3;"><strong >@LION </strong>- Text to Voice v1.0.1</p>
+  <p style="opacity: 0.3;"><strong >@LION </strong>- Text to Voice v0.0.1</p>
 
   <div style="width: 100%;">
     <div class="text-container" id="textContainer" contenteditable="true" dir="ltr"></div>
+
+    <!-- Скрытый режим -->
     <button id="eyeButton" class="eye-button" title="Скрытый режим">
-        <i class="bi bi-eye-slash-fill"></i>
+      <i class="bi bi-eye-slash-fill"></i>
+    </button>
+
+    <!-- Очистка текста -->
+    <button id="clearButton" class="eye-button" title="Очистить текст" style="right: 70px;">
+      <i class="bi bi-trash3"></i>
     </button>
   </div>
 
   <div class="controls-wrapper">
-    <select id="voiceSelect"></select>
+    <div>
+      <select id="voiceSelect"></select>
+      <button id="addPhraseBtn" class="preset-add-btn">➕ Добавить фразу</button>
+    </div>
     
     <div class="controls">
       <p style="opacity: 0.3;"><strong>⌘ + Enter</strong></p>
@@ -160,6 +245,8 @@
     </div>
   </div>
 
+<div class="preset-buttons"></div>
+
 
 
   <script>
@@ -168,6 +255,12 @@
     const pauseButton = document.getElementById('pauseButton');
     const stopButton = document.getElementById('stopButton');
     const voiceSelect = document.getElementById('voiceSelect');
+    const eyeButton = document.getElementById('eyeButton');
+    const clearButton = document.getElementById('clearButton');
+
+    clearButton.addEventListener('click', () => {
+      textContainer.textContent = '';
+    });
 
     let utterance = null;
     let words = [];
@@ -177,59 +270,43 @@
     // Определяем: Mac или Windows
     const isMac = navigator.platform.toUpperCase().includes('MAC');
 
-    // Авто-замена и направление текста
-    textContainer.addEventListener('input', (e) => {
-        // Сохраняем позицию курсора
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        const startOffset = range.startOffset;
+    // Скрытый режим
+    let hiddenMode = true;
+    textContainer.classList.add('hidden-mode');
+    eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
 
-        // Исправляем символы
-        let text = textContainer.textContent;
-        let newText = '';
-        for (let char of text) newText += enToRuMap[char] || char;
-        if (newText !== text) textContainer.textContent = newText;
-
-        // Принудительно LTR
-        textContainer.style.direction = 'ltr';
-
-        // Восстанавливаем курсор
-        const newRange = document.createRange();
-        newRange.setStart(textContainer.firstChild || textContainer, startOffset);
-        newRange.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(newRange);
-    });
-
-    textContainer.addEventListener('focus', () => {
-      textContainer.dir = 'ltr';
-    });
-
-    // Обновление направления текста
-    function updateDirection() {
-      const text = textContainer.textContent.trim();
-      if (!text) {
-        textContainer.dir = 'ltr';
-        return;
-      }
-      const firstChar = text[0];
-      if (firstChar.match(/[A-Za-z]/) || firstChar.match(/[А-Яа-яЁё]/)) {
-        textContainer.dir = 'ltr';
+    eyeButton.addEventListener('click', () => {
+      hiddenMode = !hiddenMode;
+      if (hiddenMode) {
+        textContainer.classList.add('hidden-mode');
+        eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
       } else {
-        textContainer.dir = 'ltr'; // по умолчанию
+        textContainer.classList.remove('hidden-mode');
+        eyeButton.innerHTML = '<i class="bi bi-eye-fill"></i>';
       }
-    }
+    });
 
-    // Состояние кнопок
-    function updateState(state) {
-      playButton.classList.remove('active');
-      pauseButton.classList.remove('active');
-      stopButton.classList.remove('active');
+    // Авто-замена и LTR
+    textContainer.addEventListener('input', () => {
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const startOffset = range.startOffset;
 
-      if (state === 'play') playButton.classList.add('active');
-      if (state === 'pause') pauseButton.classList.add('active');
-      if (state === 'stop') stopButton.classList.add('active');
-    }
+      let text = textContainer.textContent;
+      let newText = '';
+      for (let char of text) newText += enToRuMap[char] || char;
+      if (newText !== text) textContainer.textContent = newText;
+
+      textContainer.style.direction = 'ltr';
+
+      const newRange = document.createRange();
+      newRange.setStart(textContainer.firstChild || textContainer, startOffset);
+      newRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    });
+
+    textContainer.addEventListener('focus', () => textContainer.dir = 'ltr');
 
     // Подсветка слов
     function renderProgress() {
@@ -243,41 +320,30 @@
       if (currentElem) currentElem.scrollIntoView({behavior: "smooth", block: "center"});
     }
 
-    // Загрузка голосов
-    function loadVoices() {
-      voices = speechSynthesis.getVoices();
-      voiceSelect.innerHTML = '';
-
-      // Один английский голос
-      const englishVoice = voices.find(v => v.lang.startsWith('en'));
-      if (englishVoice) {
-        const option = document.createElement('option');
-        option.value = voices.indexOf(englishVoice);
-        option.textContent = `${englishVoice.name} (${englishVoice.lang})`;
-        voiceSelect.appendChild(option);
+    // Направление текста
+    function updateDirection() {
+      const text = textContainer.textContent.trim();
+      if (!text) {
+        textContainer.dir = 'ltr';
+        return;
       }
-
-      // Все русские голоса
-      const russianVoices = voices.filter(v => v.lang.startsWith('ru'));
-      russianVoices.forEach(v => {
-        const option = document.createElement('option');
-        option.value = voices.indexOf(v);
-        option.textContent = `${v.name} (${v.lang})`;
-        voiceSelect.appendChild(option);
-      });
-
-      // По умолчанию первый русский
-      if (russianVoices.length > 0) {
-        voiceSelect.value = voices.indexOf(russianVoices[0]);
-      }
-
-      updateDirection(); // корректируем направление
+      const firstChar = text[0];
+      if (firstChar.match(/[A-Za-zА-Яа-яЁё]/)) textContainer.dir = 'ltr';
+      else textContainer.dir = 'ltr';
     }
 
-    speechSynthesis.onvoiceschanged = loadVoices;
-    loadVoices();
+    // Кнопки воспроизведения
+    function updateState(state) {
+      playButton.classList.remove('active');
+      pauseButton.classList.remove('active');
+      stopButton.classList.remove('active');
 
-    // Воспроизведение
+      if (state === 'play') playButton.classList.add('active');
+      if (state === 'pause') pauseButton.classList.add('active');
+      if (state === 'stop') stopButton.classList.add('active');
+    }
+
+    // Воспроизведение текста
     function playSpeech() {
       const text = textContainer.textContent.trim();
       if (!text) return;
@@ -287,11 +353,8 @@
       renderProgress();
 
       utterance = new SpeechSynthesisUtterance(text);
-
       const selectedIndex = voiceSelect.value;
-      if (voices[selectedIndex]) {
-        utterance.voice = voices[selectedIndex];
-      }
+      if (voices[selectedIndex]) utterance.voice = voices[selectedIndex];
 
       let charIndex = 0;
       utterance.onboundary = (event) => {
@@ -312,64 +375,120 @@
       };
       utterance.onpause = () => updateState('pause');
 
-      // Устанавливаем язык озвучки по голосу
       utterance.lang = voices[selectedIndex]?.lang || 'ru-RU';
       speechSynthesis.speak(utterance);
     }
 
-    // Кнопки
-    playButton.addEventListener('click', playSpeech);
-    pauseButton.addEventListener('click', () => {
-      if (speechSynthesis.speaking) {
-        speechSynthesis.pause();
-        updateState('pause');
+    // Загрузка голосов
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      voiceSelect.innerHTML = '';
+
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) {
+        const option = document.createElement('option');
+        option.value = voices.indexOf(englishVoice);
+        option.textContent = `${englishVoice.name} (${englishVoice.lang})`;
+        voiceSelect.appendChild(option);
       }
-    });
-    stopButton.addEventListener('click', () => {
-      speechSynthesis.cancel();
-      utterance = null;
-      wordIndex = 0;
-      renderProgress();
-      updateState('stop');
-    });
+
+      const russianVoices = voices.filter(v => v.lang.startsWith('ru'));
+      russianVoices.forEach(v => {
+        const option = document.createElement('option');
+        option.value = voices.indexOf(v);
+        option.textContent = `${v.name} (${v.lang})`;
+        voiceSelect.appendChild(option);
+      });
+
+      if (russianVoices.length > 0) voiceSelect.value = voices.indexOf(russianVoices[0]);
+      updateDirection();
+    }
+
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    // Кнопки управления
+    playButton.addEventListener('click', playSpeech);
+    pauseButton.addEventListener('click', () => { if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause');}});
+    stopButton.addEventListener('click', () => { speechSynthesis.cancel(); utterance = null; wordIndex = 0; renderProgress(); updateState('stop');});
 
     // Горячие клавиши
     textContainer.addEventListener('keydown', (event) => {
-      const hotkeyPressed =
-            (isMac && event.metaKey && event.key === 'Enter') ||   // ⌘ + Enter на Mac
-            (!isMac && event.ctrlKey && event.key === 'Enter');    // Ctrl + Enter на Windows
+      const hotkeyPressed = (isMac && event.metaKey && event.key === 'Enter') || (!isMac && event.ctrlKey && event.key === 'Enter');
+      if (hotkeyPressed) { event.preventDefault(); playSpeech(); }
+    });
 
-      if (hotkeyPressed) {
-        event.preventDefault();
-        playSpeech();
+    // Смена голоса
+    voiceSelect.addEventListener('change', updateDirection);
+    updateState('stop');
+    updateDirection();
+
+    // ===== Preset Phrases =====
+    let presetPhrases = JSON.parse(localStorage.getItem('presetPhrases') || '[]');
+
+    function savePhrases() { localStorage.setItem('presetPhrases', JSON.stringify(presetPhrases)); }
+
+    function startEditPhrase(index, phrase, wrapper){
+      wrapper.innerHTML = '';
+      const input = document.createElement('input');
+      input.value = phrase;
+      input.style.flex = '1';
+      const saveBtn = document.createElement('button'); saveBtn.innerHTML = '<i class="bi bi-floppy"></i>';
+      const cancelBtn = document.createElement('button'); cancelBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+
+      saveBtn.addEventListener('click', () => {
+        const newVal = input.value.trim();
+        if(newVal) presetPhrases[index] = newVal;
+        savePhrases(); renderPresetButtons();
+      });
+      cancelBtn.addEventListener('click', renderPresetButtons);
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(saveBtn);
+      wrapper.appendChild(cancelBtn);
+      input.focus();
+    }
+
+    function renderPresetButtons() {
+      const container = document.querySelector('.preset-buttons');
+      container.innerHTML = '';
+
+      presetPhrases.forEach((phrase, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'preset-item';
+
+        const playBtn = document.createElement('button');
+        playBtn.textContent = phrase;
+        playBtn.addEventListener('click', () => { textContainer.textContent = phrase; updateDirection(); playSpeech(); });
+
+        const editBtn = document.createElement('button');
+        editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
+
+        editBtn.addEventListener('click', () => startEditPhrase(index, phrase, wrapper));
+
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '<i class="bi bi-trash3"></i>';
+        delBtn.addEventListener('click', () => { presetPhrases.splice(index,1); savePhrases(); renderPresetButtons(); });
+
+        wrapper.appendChild(playBtn);
+        wrapper.appendChild(editBtn);
+        wrapper.appendChild(delBtn);
+
+        container.appendChild(wrapper);
+      });
+    }
+
+    // Добавление новой фразы
+    document.getElementById('addPhraseBtn').addEventListener('click', () => {
+      const newPhrase = prompt('Введите новую фразу:');
+      if (newPhrase && newPhrase.trim() !== '') {
+        presetPhrases.push(newPhrase.trim());
+        savePhrases(); renderPresetButtons();
       }
     });
 
-    // При смене голоса корректируем направление
-    voiceSelect.addEventListener('change', updateDirection);
-
-    updateState('stop');
-
-      const eyeButton = document.getElementById('eyeButton');
-      let hiddenMode = true;
-
-      // Включаем скрытый режим по умолчанию
-      textContainer.classList.add('hidden-mode');
-      eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
-
-      eyeButton.addEventListener('click', () => {
-        hiddenMode = !hiddenMode;
-
-        if (hiddenMode) {
-          textContainer.classList.add('hidden-mode');
-          eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>'; // скрытый
-        } else {
-          textContainer.classList.remove('hidden-mode');
-          eyeButton.innerHTML = '<i class="bi bi-eye-fill"></i>'; // видимый
-        }
-      });
-
-    updateDirection();
+    // Инициализация
+    renderPresetButtons();
   </script>
 </body>
 </html>
