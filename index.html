@@ -13,7 +13,6 @@
       align-items: stretch;
       justify-content: flex-start;
       padding: 20px;
-      /*min-height: 100vh;*/
       background: #f0f0f0;
     }
 
@@ -31,15 +30,7 @@
       direction: ltr; /* Принудительно слева направо */
       unicode-bidi: plaintext; /* помогает браузеру корректно определять направление */
       transition: filter 0.3s ease;
-      /*color: #ebe6e6!important;*/
     }
-
-
-
-    /* При наведении убираем размытие */
-    /*.text-container:hover {
-      color: black!important;
-    }*/
 
     .text-container span.read {
       color: #999;
@@ -97,42 +88,41 @@
     button.active svg.pause { fill: #f1c40f; }
     button svg.stop { fill: #e74c3c; }
 
-/* ========== box-sizing fix ========== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+    /* ========== box-sizing fix ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+    /* ========== box-sizing fix ========== */
 
+    /* ========== Скрытый режим ========== */
+      .eye-button {
+        position: absolute;
+        right: 34px;
+        top: 193px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 22px;
+        opacity: 0.3!important;
+        transition: opacity 0.2s!important;
+      }
 
+      .eye-button:hover {
+        opacity: 1!important;
+      }
 
+      /* скрытый режим */
+      .hidden-mode {
+        color: #ebe6e6 !important;
+      }
 
-.eye-button {
-  position: absolute;
-  right: 34px;
-  top: 193px; /* при необходимости подкорректируй */
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  font-size: 22px;
-  opacity: 0.3;
-  transition: opacity 0.2s;
-}
-
-.eye-button:hover {
-  opacity: 1;
-}
-
-/* скрытый режим */
-.hidden-mode {
-  color: #ebe6e6 !important;
-}
-
-.hidden-mode:hover {
-  color: black !important;
-}
-
+      .hidden-mode:hover {
+        color: black !important;
+      }
+    /* ========== Скрытый режим ========== */
 
 
 
@@ -141,7 +131,7 @@
 </head>
 <body>
 
-  <p style="opacity: 0.3;"><strong >@Lion </strong>- Text to Voice v0.0.1</p>
+  <p style="opacity: 0.3;"><strong >@LION </strong>- Text to Voice v0.0.1</p>
 
   <div style="width: 100%;">
     <div class="text-container" id="textContainer" contenteditable="true" dir="ltr"></div>
@@ -179,8 +169,6 @@
     const stopButton = document.getElementById('stopButton');
     const voiceSelect = document.getElementById('voiceSelect');
 
-
-
     let utterance = null;
     let words = [];
     let wordIndex = 0;
@@ -188,7 +176,6 @@
 
     // Определяем: Mac или Windows
     const isMac = navigator.platform.toUpperCase().includes('MAC');
-
 
     // Авто-замена и направление текста
     textContainer.addEventListener('input', (e) => {
