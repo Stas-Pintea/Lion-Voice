@@ -1,494 +1,277 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title></title>
-  <link rel="icon" type="text/css" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAMMOAADDDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMAAACWAAAAVwAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1AAAA0QAAAP8AAADWAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgAAACoAAAAVQAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQAAANEAAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAsQAAAP8AAADqAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABrAAAA9gAAAP8AAADXAAAAKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1AAAA0QAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAABwAAACkAAAASAAAAAAAAAAYAAACLAAAA/gAAAP8AAACdAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA7AAAAWQAAAFoAAABZAAAAZQAAANEAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAABoAAAA6wAAAK8AAAAZAAAAAAAAABcAAADFAAAA/wAAAO4AAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAhgAAAPIAAAD+AAAA/gAAAP4AAAD+AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAI4AAAD/AAAA/wAAAJQAAAAFAAAAAAAAAFwAAAD6AAAA/wAAAI4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAADsAAADwAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAJgAAAM0AAAD/AAAA7wAAAEAAAAAAAAAAFwAAANEAAAD/AAAAzQAAABMAAAAAAAAAAAAAAAAAAAAAAAAAWQAAAP0AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAAAAAAAVAAAAPYAAAD/AAAAkwAAAAAAAAAAAAAAmgAAAP8AAADuAAAAMgAAAAAAAAAAAAAAAAAAAAAAAABbAAAA/gAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAAAAAAATAAAAzQAAAP8AAADHAAAADgAAAAAAAABuAAAA/wAAAPoAAABOAAAAAAAAAAAAAAAAAAAAAAAAAFoAAAD+AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAAAAAAAMAAACrAAAA/wAAANwAAAAbAAAAAAAAAFgAAAD9AAAA/wAAAF4AAAAAAAAAAAAAAAAAAAAAAAAAWgAAAP4AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAAAAAAABAAAAK4AAAD/AAAA3AAAABsAAAAAAAAAVwAAAP0AAAD/AAAAXgAAAAAAAAAAAAAAAAAAAAAAAABbAAAA/gAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAAAAAAAYAAAA0wAAAP8AAADGAAAADQAAAAAAAABqAAAA/wAAAPsAAABPAAAAAAAAAAAAAAAAAAAAAAAAAFkAAAD9AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAAAAAAGIAAAD6AAAA/wAAAI8AAAAAAAAAAAAAAJMAAAD/AAAA7gAAADMAAAAAAAAAAAAAAAAAAAAAAAAAOwAAAPAAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAAzAAAA2gAAAP8AAADrAAAAOwAAAAAAAAASAAAAygAAAP8AAADQAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAhwAAAPIAAAD+AAAA/gAAAP4AAAD+AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAIcAAAD/AAAA/QAAAIcAAAADAAAAAAAAAE8AAAD2AAAA/wAAAJMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAOwAAAFkAAABaAAAAWQAAAGUAAADRAAAA/wAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAQgAAAMQAAACSAAAAEgAAAAAAAAAPAAAAtwAAAP8AAADwAAAAQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAABAAAADAAAAAUAAAAAAAAAAgAAAHcAAAD7AAAA/wAAAKYAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAA7wAAAP8AAADgAAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAKUAAAD/AAAA8gAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAANcAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARQAAAK4AAABnAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIAAACVAAAAWwAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////+H9///B+H//gfB//wH4P/4BiB+AAYQfAAGCHwABgg8AAcMPAAHBDwABwQ8AAcEPAAHBDwABww8AAYIPAAGCH4ABhB/+AYgf/wH4P/+B8H//wfh//+H8///////////////////////////8=" sizes="64x64">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      padding: 20px;
-      background: #f0f0f0;
-    }
-
-    .text-container {
-      width: 100%;
-      height: 150px;
-      padding: 10px;
-      font-size: 16px;
-      background: #fff;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      line-height: 1.4;
-      margin-bottom: 10px;
-      border-radius: 12px;
-      direction: ltr; /* Принудительно слева направо */
-      unicode-bidi: plaintext; /* помогает браузеру корректно определять направление */
-      transition: filter 0.3s ease;
-    }
-
-    .text-container span.read {
-      color: #999;
-    }
-
-    .text-container span.current {
-      background-color: #d4f7d4;
-      color: #000;
-      animation: pulse 0.8s infinite;
-    }
-
-    @keyframes pulse {
-      0% { background-color: #d4f7d4; }
-      50% { background-color: #aef2ae; }
-      100% { background-color: #d4f7d4; }
-    }
-
-    .controls-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    #voiceSelect {
-      padding: 8px;
-      border-radius: 6px;
-    }
-
-    .controls {
-      display: flex;
-      /*gap: 15px;*/
-    }
-
-    button {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      padding: 8px;
-    }
-
-    button:hover{
-      opacity: 0.7;
-    }
-
-    button svg {
-      width: 24px;
-      height: 24px;
-      fill: #333;
-      transition: fill 0.2s;
-    }
-
-    button.active svg.play { fill: #2ecc71; }
-    button.active svg.pause { fill: #f1c40f; }
-    button svg.stop { fill: #e74c3c; }
-
-    /* ========== box-sizing fix ========== */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-    /* ========== box-sizing fix ========== */
-
-    /* ========== Скрытый режим ========== */
-      .eye-button {
-        position: absolute;
-        right: 34px;
-        top: 193px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        /*padding: 4px;*/
-        font-size: 19px;
-        opacity: 0.3!important;
-        transition: opacity 0.2s!important;
-      }
-
-      .eye-button:hover {
-        opacity: 1!important;
-      }
-
-      /* скрытый режим */
-      .hidden-mode {
-        color: #ebe6e6 !important;
-      }
-
-      .hidden-mode:hover {
-        color: black !important;
-      }
-    /* ========== Скрытый режим ========== */
-
-    /* ========== Пресеты ========== */
-      .preset-buttons {
-        margin-top: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      /* Группа кнопок одной фразы */
-      .preset-item {
-        display: inline-flex;
-        margin: 4px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 0 2px rgba(0,0,0,0.2);
-      }
-
-      /* Общий стиль всех кнопок в preset-item */
-      .preset-item button {
-        padding: 8px 12px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        background: #fff;
-        transition: 0.2s;
-      }
-
-      /* Главная кнопка воспроизведения */
-      .preset-item button.play-btn {
-        background: #f0f0f0;
-        font-weight: 500;
-      }
-
-      /* Hover эффекты для action-кнопок */
-      .preset-item button.edit-btn:hover {
-        background: #d4e4ff;
-      }
-      .preset-item button.delete-btn:hover {
-        background: #ffd4d4;
-      }
-      .preset-item button.save-btn:hover {
-        background: #d4ffd4;
-      }
-      .preset-item button.cancel-btn:hover {
-        background: #ffe2e2;
-      }
-
-      /* Кнопка добавления новой фразы */
-      .preset-add-btn,
-      .add-btn {
-        margin-top: 10px;
-        padding: 8px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #fff;
-        border: 1px solid #aaa;
-        font-size: 14px;
-        transition: 0.2s;
-      }
-
-      .add-btn:hover,
-      .preset-add-btn:hover {
-        background: #ebe6e6;
-      }
-
-      /* Поле ввода новой или редактируемой фразы */
-      #newPhraseInput,
-      .edit-input {
-        flex: 1;
-        padding: 6px 10px;
-        font-size: 14px;
-        border-radius: 6px;
-        border: 1px solid #aaa;
-      }
-    /* ========== Пресеты ========== */
-
-
-
-  </style>
+<meta charset="UTF-8">
+<title>Text to Voice with Auto Translator</title>
+<link rel="icon" type="text/css" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAMMOAADDDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMAAACWAAAAVwAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1AAAA0QAAAP8AAADWAAAAGAAA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AIcAAAD/AAAA/QAAAIcAAAADAAAAAAAAAE8AAAD2AAAA/wAAAJMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAOwAAAFkAAABaAAAAWQAAAGUAAADRAAAA/wAAAP8AAAD/AAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAQgAAAMQAAACSAAAAEgAAAAAAAAAPAAAAtwAAAP8AAADwAAAAQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAAD/AAAA/wAAAOAAAAAfAAAAAAAAAAAAAAABAAAADAAAAAUAAAAAAAAAAgAAAHcAAAD7AAAA/wAAAKYAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAAD/AAAA4AAAAB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAA7wAAAP8AAADgAAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAAP8AAADgAAAAHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAKUAAAD/AAAA8gAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAAADRAAAA/wAAANcAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARQAAAK4AAABnAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIAAACVAAAAWwAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////+H9///B+H//gfB//wH4P/4BiB+AAYQfAAGCHwABgg8AAcMPAAHBDwABwQ8AAcEPAAHBDwABww8AAYIPAAGCH4ABhB/+AYgf/wH4P/+B8H//wfh//+H8///////////////////////////8=" sizes="64x64">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<style>
+body { font-family: Arial,sans-serif; display:flex; flex-direction:column; align-items:stretch; padding:20px; background:#f0f0f0; }
+.text-container { width:100%; height:100px; padding:10px; font-size:16px; background:#fff; overflow-y:auto; border:1px solid #ccc; line-height:1.4; margin-top: 5px; border-radius:12px; direction:ltr; unicode-bidi:plaintext; transition:filter 0.3s ease; }
+.text-container span.read { color:#999; }
+.text-container span.current { background-color:#d4f7d4; color:#000; animation:pulse 0.8s infinite; }
+@keyframes pulse {0%{background-color:#d4f7d4;}50%{background-color:#aef2ae;}100%{background-color:#d4f7d4;}}
+.controls-wrapper { width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+#voiceSelect { padding:8px; border-radius:6px; }
+.controls { display:flex; }
+button { border:none; background:transparent; cursor:pointer; padding:8px; }
+button:hover{ opacity:0.7; }
+button svg { width:24px; height:24px; fill:#333; transition:fill 0.2s; }
+button.active svg.play { fill:#2ecc71; }
+button.active svg.pause { fill:#f1c40f; }
+button svg.stop { fill:#e74c3c; }
+*,*::before,*::after{box-sizing:border-box;}
+.eye-button { position:absolute; right:34px; top:283px; background:transparent; border:none; cursor:pointer; font-size:19px; opacity:0.3!important; transition:opacity 0.2s!important;}
+.eye-button:hover { opacity:1!important; }
+.hidden-mode { color:#ebe6e6!important; }
+.hidden-mode:hover { color:black!important; }
+.preset-buttons { display:flex; flex-wrap:wrap; gap:10px; }
+.preset-item { display:inline-flex; margin:4px; border-radius:8px; overflow:hidden; box-shadow:0 0 2px rgba(0,0,0,0.2);}
+.preset-item button { padding:8px 12px; border:none; cursor:pointer; font-size:14px; background:#fff; transition:0.2s; }
+.preset-item button.edit-btn:hover { background:#d4e4ff; }
+.preset-item button.delete-btn:hover { background:#ffd4d4; }
+.preset-add-btn, .add-btn { padding:8px 14px; border-radius:8px; cursor:pointer; background:#fff; border:1px solid #aaa; font-size:14px; transition:0.2s; }
+.add-btn:hover, .preset-add-btn:hover { background:#ebe6e6; }
+#newPhraseInput, .edit-input { flex:1; padding:6px 10px; font-size:14px; border-radius:6px; border:1px solid #aaa; }
+</style>
 </head>
 <body>
 
-  <p style="opacity: 0.3;"><strong >@LION </strong>- Text to Voice v0.0.1</p>
+<p style="opacity:0.3;"><strong>@LION</strong> - Text to Voice v0.0.4</p>
 
-  <div style="width: 100%;">
-    <div class="text-container" id="textContainer" contenteditable="true" dir="ltr"></div>
+<div style="width:100%;">
 
-    <!-- Скрытый режим -->
-    <button id="eyeButton" class="eye-button" title="Скрытый режим">
-      <i class="bi bi-eye-slash-fill"></i>
-    </button>
-
-    <!-- Очистка текста -->
-    <button id="clearButton" class="eye-button" title="Очистить текст" style="right: 70px;">
-      <i class="bi bi-trash3"></i>
+  <!-- TRANSLATOR -->
+  <div style="display:flex; gap:10px; align-items:center;">
+    <button id="swapDirectionBtn" class="preset-add-btn" data-value="ru-en">
+      <i class="bi bi-translate"></i> RU <i class="bi bi-arrow-right-short mr-1 ml-1"></i> EN
     </button>
   </div>
+  <div id="translatorInput" class="text-container" contenteditable="true" style="height:100px;"></div>
+  <!-- END TRANSLATOR -->
 
-  <div class="controls-wrapper">
-    <div>
-      <select id="voiceSelect"></select>
-      <button id="addPhraseBtn" class="preset-add-btn">➕ Добавить фразу</button>
-    </div>
-    
-    <div class="controls">
-      <p style="opacity: 0.3;"><strong>⌘ + Enter</strong></p>
-      <button id="playButton" title="⌘ + Enter Воспроизвести">
-        <svg class="play" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"></polygon></svg>
-      </button>
-      <button id="pauseButton" title="Пауза">
-        <svg class="pause" viewBox="0 0 24 24">
-          <rect x="6" y="4" width="4" height="16"></rect>
-          <rect x="14" y="4" width="4" height="16"></rect>
-        </svg>
-      </button>
-      <button id="stopButton" title="Стоп">
-        <svg class="stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></svg>
-      </button>
-    </div>
+  <div class="text-container" id="textContainer" contenteditable="true" dir="ltr"></div>
+
+  <button id="eyeButton" class="eye-button" title="Скрытый режим"><i class="bi bi-eye-slash-fill"></i></button>
+  <button id="clearButton" class="eye-button" title="Очистить текст" style="right:70px;"><i class="bi bi-trash3"></i></button>
+</div>
+
+<div class="controls-wrapper">
+  <div>
+    <select id="voiceSelect"></select>
+    <button id="addPhraseBtn" class="preset-add-btn">➕ Add new</button>
   </div>
+  <div class="controls">
+    <p style="opacity:0.3;"><strong>⌘ + Enter | Alt + Enter</strong></p>
+    <button id="playButton" title="Воспроизвести"><svg class="play" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"></polygon></svg></button>
+    <button id="pauseButton" title="Пауза"><svg class="pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button>
+    <button id="stopButton" title="Стоп"><svg class="stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></svg></button>
+  </div>
+</div>
 
+<label style="margin-top:20px;"><i class="bi bi-magic mr-3"></i>Saved words</label>
 <div class="preset-buttons"></div>
 
+<script>
+  const textContainer = document.getElementById('textContainer');
+  const translatorInput = document.getElementById('translatorInput');
+  const swapDirectionBtn = document.getElementById('swapDirectionBtn');
 
+  const playButton = document.getElementById('playButton');
+  const pauseButton = document.getElementById('pauseButton');
+  const stopButton = document.getElementById('stopButton');
+  const voiceSelect = document.getElementById('voiceSelect');
+  const eyeButton = document.getElementById('eyeButton');
+  const clearButton = document.getElementById('clearButton');
 
-  <script>
-    const textContainer = document.getElementById('textContainer');
-    const playButton = document.getElementById('playButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const stopButton = document.getElementById('stopButton');
-    const voiceSelect = document.getElementById('voiceSelect');
-    const eyeButton = document.getElementById('eyeButton');
-    const clearButton = document.getElementById('clearButton');
+  let utterance = null, words=[], wordIndex=0, voices=[];
+  const isMac = navigator.platform.toUpperCase().includes('MAC');
+  let hiddenMode=true;
+  textContainer.classList.add('hidden-mode');
+  translatorInput.classList.add('hidden-mode');
+  eyeButton.innerHTML='<i class="bi bi-eye-slash-fill"></i>';
 
-    clearButton.addEventListener('click', () => {
-      textContainer.textContent = '';
-    });
+  // ======================= Скрытый режим =======================
+// 🔵 Кнопка "Глаз" — скрыть/показать оба поля
+eyeButton.addEventListener('click', () => {
+  hiddenMode = !hiddenMode;
 
-    let utterance = null;
-    let words = [];
-    let wordIndex = 0;
-    let voices = [];
-
-    // Определяем: Mac или Windows
-    const isMac = navigator.platform.toUpperCase().includes('MAC');
-
-    // Скрытый режим
-    let hiddenMode = true;
+  if (hiddenMode) {
     textContainer.classList.add('hidden-mode');
+    translatorInput.classList.add('hidden-mode');
     eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
+  } else {
+    textContainer.classList.remove('hidden-mode');
+    translatorInput.classList.remove('hidden-mode');
+    eyeButton.innerHTML = '<i class="bi bi-eye-fill"></i>';
+  }
+});
 
-    eyeButton.addEventListener('click', () => {
-      hiddenMode = !hiddenMode;
-      if (hiddenMode) {
-        textContainer.classList.add('hidden-mode');
-        eyeButton.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
-      } else {
-        textContainer.classList.remove('hidden-mode');
-        eyeButton.innerHTML = '<i class="bi bi-eye-fill"></i>';
+// 🔵 Кнопка "Корзина" — очистить оба поля
+clearButton.addEventListener('click', () => {
+  textContainer.textContent = '';
+  translatorInput.textContent = '';
+});
+
+  // ======================= TTS =======================
+  function renderProgress(){ 
+    textContainer.innerHTML=words.map((w,i)=>{
+      if(i<wordIndex) return `<span class="read">${w}</span>`;
+      if(i===wordIndex) return `<span class="current">${w}</span>`;
+      return `<span>${w}</span>`;
+    }).join(' ');
+    const currentElem=textContainer.querySelector('.current');
+    if(currentElem) currentElem.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+
+  function updateDirection(){ textContainer.dir='ltr'; }
+  function updateState(state){ 
+    playButton.classList.remove('active'); pauseButton.classList.remove('active'); stopButton.classList.remove('active'); 
+    if(state==='play') playButton.classList.add('active');
+    if(state==='pause') pauseButton.classList.add('active');
+    if(state==='stop') stopButton.classList.add('active');
+  }
+
+  function playSpeech(){
+    const text=textContainer.textContent.trim();
+    if(!text) return;
+    words=text.split(/\s+/); wordIndex=0; renderProgress();
+    utterance=new SpeechSynthesisUtterance(text);
+    const selectedIndex=voiceSelect.value;
+    if(voices[selectedIndex]) utterance.voice=voices[selectedIndex];
+    let charIndex=0;
+    utterance.onboundary=(event)=>{
+      if(event.charIndex!==undefined){
+        while(charIndex<words.join(' ').length && event.charIndex>=charIndex+words[wordIndex].length+1){
+          charIndex+=words[wordIndex].length+1; wordIndex++;
+        }
+        renderProgress();
       }
-    });
+    };
+    utterance.onstart=()=>updateState('play');
+    utterance.onend=()=>{ wordIndex=words.length; renderProgress(); updateState('stop'); };
+    utterance.onpause=()=>updateState('pause');
+    utterance.lang=voices[selectedIndex]?.lang || 'ru-RU';
+    speechSynthesis.speak(utterance);
+  }
 
-    // Авто-замена и LTR
-    textContainer.addEventListener('input', () => {
-      const selection = window.getSelection();
-      const range = selection.getRangeAt(0);
-      const startOffset = range.startOffset;
-
-      let text = textContainer.textContent;
-      let newText = '';
-      for (let char of text) newText += enToRuMap[char] || char;
-      if (newText !== text) textContainer.textContent = newText;
-
-      textContainer.style.direction = 'ltr';
-
-      const newRange = document.createRange();
-      newRange.setStart(textContainer.firstChild || textContainer, startOffset);
-      newRange.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
-    });
-
-    textContainer.addEventListener('focus', () => textContainer.dir = 'ltr');
-
-    // Подсветка слов
-    function renderProgress() {
-      textContainer.innerHTML = words.map((w, i) => {
-        if (i < wordIndex) return `<span class="read">${w}</span>`;
-        if (i === wordIndex) return `<span class="current">${w}</span>`;
-        return `<span>${w}</span>`;
-      }).join(' ');
-
-      const currentElem = textContainer.querySelector('.current');
-      if (currentElem) currentElem.scrollIntoView({behavior: "smooth", block: "center"});
+  function loadVoices(){
+    voices=speechSynthesis.getVoices();
+    voiceSelect.innerHTML='';
+    const englishVoice=voices.find(v=>v.lang.startsWith('en'));
+    if(englishVoice){ 
+      const option=document.createElement('option'); 
+      option.value=voices.indexOf(englishVoice); 
+      option.textContent=`${englishVoice.name} (${englishVoice.lang})`; 
+      voiceSelect.appendChild(option);
     }
+    const russianVoices=voices.filter(v=>v.lang.startsWith('ru'));
+    russianVoices.forEach(v=>{ 
+      const option=document.createElement('option'); 
+      option.value=voices.indexOf(v); 
+      option.textContent=`${v.name} (${v.lang})`; 
+      voiceSelect.appendChild(option);
+    });
+    if(russianVoices.length>0) voiceSelect.value=voices.indexOf(russianVoices[0]);
+    updateDirection();
+  }
+  speechSynthesis.onvoiceschanged=loadVoices;
+  loadVoices();
 
-    // Направление текста
-    function updateDirection() {
-      const text = textContainer.textContent.trim();
+  // ======================= Кнопки TTS =======================
+  playButton.addEventListener('click',playSpeech);
+  pauseButton.addEventListener('click',()=>{ if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause'); }});
+  stopButton.addEventListener('click',()=>{ speechSynthesis.cancel(); utterance=null; wordIndex=0; renderProgress(); updateState('stop'); });
+  voiceSelect.addEventListener('change', updateDirection);
+
+  // ======================= Горячие клавиши =======================
+  document.addEventListener('keydown', (event) => {
+    const activeEl = document.activeElement;
+    if (activeEl !== textContainer && activeEl !== translatorInput) return;
+
+    const isEnter = event.key==='Enter' || event.code==='Enter' || event.code==='NumpadEnter';
+    let hotkeyPressed = false;
+
+    if(isMac) hotkeyPressed = event.metaKey && isEnter;
+    else hotkeyPressed = event.altKey && isEnter;
+
+    if(hotkeyPressed){
+      event.preventDefault();
+      playSpeech();
+    }
+  });
+
+  // ======================= Presets =======================
+  let presetPhrases=JSON.parse(localStorage.getItem('presetPhrases')||'[]');
+  function savePhrases(){ localStorage.setItem('presetPhrases',JSON.stringify(presetPhrases)); }
+  function startEditPhrase(index, phrase, wrapper){
+    wrapper.innerHTML='';
+    const input=document.createElement('input'); input.value=phrase; input.style.flex='1';
+    const saveBtn=document.createElement('button'); saveBtn.innerHTML='<i class="bi bi-floppy"></i>';
+    const cancelBtn=document.createElement('button'); cancelBtn.innerHTML='<i class="bi bi-x-lg"></i>';
+    saveBtn.addEventListener('click',()=>{ const newVal=input.value.trim(); if(newVal)presetPhrases[index]=newVal; savePhrases(); renderPresetButtons(); });
+    cancelBtn.addEventListener('click',renderPresetButtons);
+    wrapper.appendChild(input); wrapper.appendChild(saveBtn); wrapper.appendChild(cancelBtn);
+    input.focus();
+  }
+  function renderPresetButtons(){
+    const container=document.querySelector('.preset-buttons'); container.innerHTML='';
+    presetPhrases.forEach((phrase,index)=>{
+      const wrapper=document.createElement('div'); wrapper.className='preset-item';
+      const playBtn=document.createElement('button'); playBtn.textContent=phrase;
+      playBtn.addEventListener('click',()=>{ textContainer.textContent=phrase; updateDirection(); playSpeech(); });
+      const editBtn=document.createElement('button'); editBtn.innerHTML='<i class="bi bi-pencil"></i>'; editBtn.addEventListener('click',()=>startEditPhrase(index,phrase,wrapper));
+      const delBtn=document.createElement('button'); delBtn.innerHTML='<i class="bi bi-trash3"></i>'; delBtn.addEventListener('click',()=>{presetPhrases.splice(index,1); savePhrases(); renderPresetButtons();});
+      wrapper.appendChild(playBtn); wrapper.appendChild(editBtn); wrapper.appendChild(delBtn);
+      container.appendChild(wrapper);
+    });
+  }
+  document.getElementById('addPhraseBtn').addEventListener('click',()=>{ const newPhrase=prompt('Enter a new phrase:'); if(newPhrase && newPhrase.trim()!==''){ presetPhrases.push(newPhrase.trim()); savePhrases(); renderPresetButtons(); }});
+  renderPresetButtons();
+
+  // ======================= TRANSLATOR ====================
+  let translateTimeout=null;
+  async function translateText(text,direction){
+    const [from,to]=direction.split('-');
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    try{ const response=await fetch(url); const data=await response.json(); return data?.responseData?.translatedText||""; }
+    catch(e){ console.error("Ошибка перевода:",e); return ""; }
+  }
+
+  // Авто-перевод с задержкой 0.25 секунды
+  const DEBOUNCE = 250; // 0.25 секунды
+
+  translatorInput.addEventListener('input', () => {
+    if (translateTimeout) clearTimeout(translateTimeout);
+
+    translateTimeout = setTimeout(async () => {
+      const text = translatorInput.textContent.trim();
       if (!text) {
-        textContainer.dir = 'ltr';
+        textContainer.textContent = '';
         return;
       }
-      const firstChar = text[0];
-      if (firstChar.match(/[A-Za-zА-Яа-яЁё]/)) textContainer.dir = 'ltr';
-      else textContainer.dir = 'ltr';
-    }
+      const direction = swapDirectionBtn.dataset.value;
+      const translated = await translateText(text, direction);
 
-    // Кнопки воспроизведения
-    function updateState(state) {
-      playButton.classList.remove('active');
-      pauseButton.classList.remove('active');
-      stopButton.classList.remove('active');
-
-      if (state === 'play') playButton.classList.add('active');
-      if (state === 'pause') pauseButton.classList.add('active');
-      if (state === 'stop') stopButton.classList.add('active');
-    }
-
-    // Воспроизведение текста
-    function playSpeech() {
-      const text = textContainer.textContent.trim();
-      if (!text) return;
-
-      words = text.split(/\s+/);
-      wordIndex = 0;
-      renderProgress();
-
-      utterance = new SpeechSynthesisUtterance(text);
-      const selectedIndex = voiceSelect.value;
-      if (voices[selectedIndex]) utterance.voice = voices[selectedIndex];
-
-      let charIndex = 0;
-      utterance.onboundary = (event) => {
-        if (event.charIndex !== undefined) {
-          while (charIndex < words.join(' ').length && event.charIndex >= charIndex + words[wordIndex].length + 1) {
-            charIndex += words[wordIndex].length + 1;
-            wordIndex++;
-          }
-          renderProgress();
-        }
-      };
-
-      utterance.onstart = () => updateState('play');
-      utterance.onend = () => {
-        wordIndex = words.length;
-        renderProgress();
-        updateState('stop');
-      };
-      utterance.onpause = () => updateState('pause');
-
-      utterance.lang = voices[selectedIndex]?.lang || 'ru-RU';
-      speechSynthesis.speak(utterance);
-    }
-
-    // Загрузка голосов
-    function loadVoices() {
-      voices = speechSynthesis.getVoices();
-      voiceSelect.innerHTML = '';
-
-      const englishVoice = voices.find(v => v.lang.startsWith('en'));
-      if (englishVoice) {
-        const option = document.createElement('option');
-        option.value = voices.indexOf(englishVoice);
-        option.textContent = `${englishVoice.name} (${englishVoice.lang})`;
-        voiceSelect.appendChild(option);
+      if (translated) {
+        textContainer.textContent = translated;
+        updateDirection();
       }
+    }, DEBOUNCE);
+  });
 
-      const russianVoices = voices.filter(v => v.lang.startsWith('ru'));
-      russianVoices.forEach(v => {
-        const option = document.createElement('option');
-        option.value = voices.indexOf(v);
-        option.textContent = `${v.name} (${v.lang})`;
-        voiceSelect.appendChild(option);
-      });
-
-      if (russianVoices.length > 0) voiceSelect.value = voices.indexOf(russianVoices[0]);
-      updateDirection();
+  // ======================= Кнопка Swap ====================
+  swapDirectionBtn.addEventListener('click',()=>{
+    if(swapDirectionBtn.dataset.value==='ru-en'){
+      swapDirectionBtn.dataset.value='en-ru';
+      swapDirectionBtn.innerHTML='<i class="bi bi-translate"></i> EN <i class="bi bi-arrow-right-short mr-1 ml-1"></i> RU';
+    } else {
+      swapDirectionBtn.dataset.value='ru-en';
+      swapDirectionBtn.innerHTML='<i class="bi bi-translate"></i> RU <i class="bi bi-arrow-right-short mr-1 ml-1"></i> EN';
     }
-
-    speechSynthesis.onvoiceschanged = loadVoices;
-    loadVoices();
-
-    // Кнопки управления
-    playButton.addEventListener('click', playSpeech);
-    pauseButton.addEventListener('click', () => { if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause');}});
-    stopButton.addEventListener('click', () => { speechSynthesis.cancel(); utterance = null; wordIndex = 0; renderProgress(); updateState('stop');});
-
-    // Горячие клавиши
-    textContainer.addEventListener('keydown', (event) => {
-      const hotkeyPressed = (isMac && event.metaKey && event.key === 'Enter') || (!isMac && event.ctrlKey && event.key === 'Enter');
-      if (hotkeyPressed) { event.preventDefault(); playSpeech(); }
-    });
-
-    // Смена голоса
-    voiceSelect.addEventListener('change', updateDirection);
-    updateState('stop');
-    updateDirection();
-
-    // ===== Preset Phrases =====
-    let presetPhrases = JSON.parse(localStorage.getItem('presetPhrases') || '[]');
-
-    function savePhrases() { localStorage.setItem('presetPhrases', JSON.stringify(presetPhrases)); }
-
-    function startEditPhrase(index, phrase, wrapper){
-      wrapper.innerHTML = '';
-      const input = document.createElement('input');
-      input.value = phrase;
-      input.style.flex = '1';
-      const saveBtn = document.createElement('button'); saveBtn.innerHTML = '<i class="bi bi-floppy"></i>';
-      const cancelBtn = document.createElement('button'); cancelBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
-
-      saveBtn.addEventListener('click', () => {
-        const newVal = input.value.trim();
-        if(newVal) presetPhrases[index] = newVal;
-        savePhrases(); renderPresetButtons();
-      });
-      cancelBtn.addEventListener('click', renderPresetButtons);
-
-      wrapper.appendChild(input);
-      wrapper.appendChild(saveBtn);
-      wrapper.appendChild(cancelBtn);
-      input.focus();
-    }
-
-    function renderPresetButtons() {
-      const container = document.querySelector('.preset-buttons');
-      container.innerHTML = '';
-
-      presetPhrases.forEach((phrase, index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'preset-item';
-
-        const playBtn = document.createElement('button');
-        playBtn.textContent = phrase;
-        playBtn.addEventListener('click', () => { textContainer.textContent = phrase; updateDirection(); playSpeech(); });
-
-        const editBtn = document.createElement('button');
-        editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
-
-        editBtn.addEventListener('click', () => startEditPhrase(index, phrase, wrapper));
-
-        const delBtn = document.createElement('button');
-        delBtn.innerHTML = '<i class="bi bi-trash3"></i>';
-        delBtn.addEventListener('click', () => { presetPhrases.splice(index,1); savePhrases(); renderPresetButtons(); });
-
-        wrapper.appendChild(playBtn);
-        wrapper.appendChild(editBtn);
-        wrapper.appendChild(delBtn);
-
-        container.appendChild(wrapper);
-      });
-    }
-
-    // Добавление новой фразы
-    document.getElementById('addPhraseBtn').addEventListener('click', () => {
-      const newPhrase = prompt('Введите новую фразу:');
-      if (newPhrase && newPhrase.trim() !== '') {
-        presetPhrases.push(newPhrase.trim());
-        savePhrases(); renderPresetButtons();
-      }
-    });
-
-    // Инициализация
-    renderPresetButtons();
-  </script>
+    // Авто-перевод при смене направления
+    translatorInput.dispatchEvent(new Event('input'));
+  });
+</script>
 </body>
 </html>
