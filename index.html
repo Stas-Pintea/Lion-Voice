@@ -13,6 +13,10 @@ body { font-family: Arial,sans-serif; display:flex; flex-direction:column; align
 @keyframes pulse {0%{background-color:#d4f7d4;}50%{background-color:#aef2ae;}100%{background-color:#d4f7d4;}}
 .controls-wrapper { width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 #voiceSelect { padding:8px; border-radius:6px; }
+#ttsSettings { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0; }
+#ttsSettings select, #ttsSettings input { padding:8px; border:1px solid #aaa; border-radius:6px; background:#fff; }
+#ttsEndpoint { min-width:260px; max-width:100%; }
+#ttsStatus { font-size:13px; color:#555; }
 .controls { display:flex; }
 button { border:none; background:transparent; cursor:pointer; padding:8px; }
 button:hover{ opacity:0.7; }
@@ -58,7 +62,7 @@ button svg.stop { fill:#e74c3c; }
 
 <div class="controls-wrapper">
   <div>
-    <select id="voiceSelect"></select>
+    <select id="voiceSelect" aria-label="Голос озвучивания"></select>
     <button id="addPhraseBtn" class="preset-add-btn">➕ Add new</button>
   </div>
   <div class="controls">
@@ -67,6 +71,18 @@ button svg.stop { fill:#e74c3c; }
     <button id="pauseButton" title="Пауза"><svg class="pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button>
     <button id="stopButton" title="Стоп"><svg class="stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></svg></button>
   </div>
+</div>
+<div id="ttsSettings">
+  <select id="ttsMode" aria-label="Способ озвучивания"><option value="local">Голоса Mac / браузера</option><option value="openai">OpenAI</option></select>
+  <select id="cloudVoice" aria-label="Голос OpenAI для русского текста" hidden>
+    <option value="marin">Marin</option><option value="cedar">Cedar</option><option value="coral">Coral</option>
+    <option value="nova">Nova</option><option value="alloy">Alloy</option><option value="ash">Ash</option>
+    <option value="ballad">Ballad</option><option value="echo">Echo</option><option value="fable">Fable</option>
+    <option value="onyx">Onyx</option><option value="sage">Sage</option><option value="shimmer">Shimmer</option><option value="verse">Verse</option>
+  </select>
+  <label id="englishVoicesLabel"><input id="showEnglishVoices" type="checkbox"> Показать английские голоса</label>
+  <input id="ttsEndpoint" type="url" placeholder="URL вашего TTS Worker" aria-label="Адрес TTS Worker" hidden>
+  <span id="ttsStatus" role="status" aria-live="polite"></span>
 </div>
 
 <label style="margin-top:20px;"><i class="bi bi-magic mr-3"></i>Saved words</label>
@@ -81,10 +97,38 @@ button svg.stop { fill:#e74c3c; }
   const pauseButton = document.getElementById('pauseButton');
   const stopButton = document.getElementById('stopButton');
   const voiceSelect = document.getElementById('voiceSelect');
+  const ttsMode = document.getElementById('ttsMode');
+  const cloudVoice = document.getElementById('cloudVoice');
+  const showEnglishVoices = document.getElementById('showEnglishVoices');
+  const englishVoicesLabel = document.getElementById('englishVoicesLabel');
+  const ttsEndpoint = document.getElementById('ttsEndpoint');
+  const ttsStatus = document.getElementById('ttsStatus');
   const eyeButton = document.getElementById('eyeButton');
   const clearButton = document.getElementById('clearButton');
 
   let utterance = null, words=[], wordIndex=0, voices=[];
+  let cloudAudio=null, cloudAudioUrl=null, requestController=null;
+  const savedVoiceKey = 'lionVoice.selectedVoice';
+  ttsMode.value=localStorage.getItem('lionVoice.ttsMode') || 'local';
+  cloudVoice.value=localStorage.getItem('lionVoice.cloudVoice') || 'marin';
+  showEnglishVoices.checked=localStorage.getItem('lionVoice.showEnglishVoices')==='true';
+  ttsEndpoint.value=localStorage.getItem('lionVoice.ttsEndpoint') || '';
+  function updateTtsControls(){
+    const cloud=ttsMode.value==='openai';
+    voiceSelect.hidden=cloud;
+    cloudVoice.hidden=!cloud;
+    englishVoicesLabel.hidden=cloud;
+    ttsEndpoint.hidden=!cloud;
+    ttsStatus.textContent=cloud && !ttsEndpoint.value.trim() ? 'Укажите адрес вашего TTS Worker' : '';
+  }
+  ttsMode.addEventListener('change',()=>{ stopSpeech(); localStorage.setItem('lionVoice.ttsMode',ttsMode.value); updateTtsControls(); });
+  cloudVoice.addEventListener('change',()=>localStorage.setItem('lionVoice.cloudVoice',cloudVoice.value));
+  showEnglishVoices.addEventListener('change',()=>{
+    localStorage.setItem('lionVoice.showEnglishVoices',String(showEnglishVoices.checked));
+    loadVoices();
+  });
+  ttsEndpoint.addEventListener('change',()=>{ localStorage.setItem('lionVoice.ttsEndpoint',ttsEndpoint.value.trim()); updateTtsControls(); });
+  updateTtsControls();
   const isMac = navigator.platform.toUpperCase().includes('MAC');
   let hiddenMode=true;
   textContainer.classList.add('hidden-mode');
@@ -115,11 +159,16 @@ clearButton.addEventListener('click', () => {
 
   // ======================= TTS =======================
   function renderProgress(){ 
-    textContainer.innerHTML=words.map((w,i)=>{
-      if(i<wordIndex) return `<span class="read">${w}</span>`;
-      if(i===wordIndex) return `<span class="current">${w}</span>`;
-      return `<span>${w}</span>`;
-    }).join(' ');
+    const fragment=document.createDocumentFragment();
+    words.forEach((word,index)=>{
+      if(index) fragment.appendChild(document.createTextNode(' '));
+      const span=document.createElement('span');
+      span.textContent=word;
+      if(index<wordIndex) span.className='read';
+      else if(index===wordIndex) span.className='current';
+      fragment.appendChild(span);
+    });
+    textContainer.replaceChildren(fragment);
     const currentElem=textContainer.querySelector('.current');
     if(currentElem) currentElem.scrollIntoView({behavior:"smooth", block:"center"});
   }
@@ -132,13 +181,64 @@ clearButton.addEventListener('click', () => {
     if(state==='stop') stopButton.classList.add('active');
   }
 
+  function stopSpeech(){
+    speechSynthesis.cancel();
+    requestController?.abort(); requestController=null;
+    if(cloudAudio){ cloudAudio.pause(); cloudAudio.src=''; cloudAudio=null; }
+    if(cloudAudioUrl){ URL.revokeObjectURL(cloudAudioUrl); cloudAudioUrl=null; }
+    utterance=null; wordIndex=0; renderProgress(); updateState('stop');
+  }
+
+  async function playCloudSpeech(text){
+    const endpoint=ttsEndpoint.value.trim();
+    if(!/^https:\/\//i.test(endpoint)){
+      ttsStatus.textContent='Нужен HTTPS-адрес TTS Worker';
+      return;
+    }
+    stopSpeech();
+    words=text.split(/\s+/); wordIndex=0; renderProgress();
+    requestController=new AbortController();
+    const currentRequest=requestController;
+    ttsStatus.textContent='Генерирую аудио…';
+    try{
+      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:cloudVoice.value}),signal:currentRequest.signal});
+      if(!response.ok) throw new Error(`Сервис вернул ${response.status}`);
+      const audioBlob=await response.blob();
+      if(currentRequest.signal.aborted) return;
+      cloudAudioUrl=URL.createObjectURL(audioBlob);
+      cloudAudio=new Audio(cloudAudioUrl);
+      cloudAudio.ontimeupdate=()=>{
+        if(cloudAudio?.duration && Number.isFinite(cloudAudio.duration)){
+          const nextIndex=Math.min(words.length-1,Math.floor(cloudAudio.currentTime/cloudAudio.duration*words.length));
+          if(nextIndex!==wordIndex){ wordIndex=nextIndex; renderProgress(); }
+        }
+      };
+      cloudAudio.onended=()=>{ wordIndex=words.length; renderProgress(); updateState('stop'); ttsStatus.textContent=''; };
+      cloudAudio.onpause=()=>{ if(cloudAudio && !cloudAudio.ended) updateState('pause'); };
+      await cloudAudio.play();
+      updateState('play'); ttsStatus.textContent='Голос сгенерирован ИИ';
+    }catch(error){
+      if(error.name!=='AbortError'){ ttsStatus.textContent=`Ошибка озвучивания: ${error.message}`; updateState('stop'); }
+    }finally{ if(requestController===currentRequest) requestController=null; }
+  }
+
   function playSpeech(){
     const text=textContainer.textContent.trim();
     if(!text) return;
+    if(ttsMode.value==='openai'){
+      if(cloudAudio?.paused && cloudAudio.currentTime>0 && cloudAudio.currentTime<cloudAudio.duration){ cloudAudio.play(); updateState('play'); return; }
+      playCloudSpeech(text); return;
+    }
+    if(voiceSelect.disabled){
+      ttsStatus.textContent='Русские голоса не найдены. Загрузите голос в macOS или выберите OpenAI.';
+      return;
+    }
+    ttsStatus.textContent='';
+    stopSpeech();
     words=text.split(/\s+/); wordIndex=0; renderProgress();
     utterance=new SpeechSynthesisUtterance(text);
-    const selectedIndex=voiceSelect.value;
-    if(voices[selectedIndex]) utterance.voice=voices[selectedIndex];
+    const selectedVoice=voices[Number(voiceSelect.value)];
+    if(selectedVoice) utterance.voice=selectedVoice;
     let charIndex=0;
     utterance.onboundary=(event)=>{
       if(event.charIndex!==undefined){
@@ -151,28 +251,46 @@ clearButton.addEventListener('click', () => {
     utterance.onstart=()=>updateState('play');
     utterance.onend=()=>{ wordIndex=words.length; renderProgress(); updateState('stop'); };
     utterance.onpause=()=>updateState('pause');
-    utterance.lang=voices[selectedIndex]?.lang || 'ru-RU';
+    utterance.lang=selectedVoice?.lang || 'ru-RU';
     speechSynthesis.speak(utterance);
   }
 
+  function voiceId(voice){
+    return JSON.stringify([voice.voiceURI, voice.name, voice.lang]);
+  }
+
   function loadVoices(){
+    const previousVoice=voices[Number(voiceSelect.value)];
     voices=speechSynthesis.getVoices();
+    const preferredId=localStorage.getItem(savedVoiceKey);
     voiceSelect.innerHTML='';
-    const englishVoice=voices.find(v=>v.lang.startsWith('en'));
-    if(englishVoice){ 
-      const option=document.createElement('option'); 
-      option.value=voices.indexOf(englishVoice); 
-      option.textContent=`${englishVoice.name} (${englishVoice.lang})`; 
-      voiceSelect.appendChild(option);
+    const languages=showEnglishVoices.checked ? [['ru','Русский'],['en','English']] : [['ru','Русский']];
+    for(const [prefix,label] of languages){
+      const matching=voices.filter(v=>v.lang.toLowerCase().startsWith(prefix));
+      if(!matching.length) continue;
+      const group=document.createElement('optgroup');
+      group.label=label;
+      matching.forEach(voice=>{
+        const option=document.createElement('option');
+        option.value=voices.indexOf(voice);
+        option.textContent=`${voice.name} (${voice.lang})${voice.localService ? ' · Mac' : ' · онлайн'}`;
+        group.appendChild(option);
+      });
+      voiceSelect.appendChild(group);
     }
-    const russianVoices=voices.filter(v=>v.lang.startsWith('ru'));
-    russianVoices.forEach(v=>{ 
-      const option=document.createElement('option'); 
-      option.value=voices.indexOf(v); 
-      option.textContent=`${v.name} (${v.lang})`; 
+    if(!voiceSelect.options.length){
+      voiceSelect.disabled=true;
+      const option=document.createElement('option');
+      option.textContent='Русские голоса не найдены';
+      option.disabled=true;
       voiceSelect.appendChild(option);
-    });
-    if(russianVoices.length>0) voiceSelect.value=voices.indexOf(russianVoices[0]);
+    } else {
+      voiceSelect.disabled=false;
+      const available=Array.from(voiceSelect.options).map(option=>voices[Number(option.value)]);
+      const selected=available.find(v=>voiceId(v)===(preferredId || (previousVoice && voiceId(previousVoice))))
+        || available[0];
+      voiceSelect.value=String(voices.indexOf(selected));
+    }
     updateDirection();
   }
   speechSynthesis.onvoiceschanged=loadVoices;
@@ -180,9 +298,16 @@ clearButton.addEventListener('click', () => {
 
   // ======================= Кнопки TTS =======================
   playButton.addEventListener('click',playSpeech);
-  pauseButton.addEventListener('click',()=>{ if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause'); }});
-  stopButton.addEventListener('click',()=>{ speechSynthesis.cancel(); utterance=null; wordIndex=0; renderProgress(); updateState('stop'); });
-  voiceSelect.addEventListener('change', updateDirection);
+  pauseButton.addEventListener('click',()=>{
+    if(ttsMode.value==='openai'){ cloudAudio?.pause(); return; }
+    if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause');}
+  });
+  stopButton.addEventListener('click',stopSpeech);
+  voiceSelect.addEventListener('change',()=>{
+    const voice=voices[Number(voiceSelect.value)];
+    if(voice) localStorage.setItem(savedVoiceKey,voiceId(voice));
+    updateDirection();
+  });
 
   // ======================= Горячие клавиши =======================
   document.addEventListener('keydown', (event) => {
