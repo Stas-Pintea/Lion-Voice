@@ -15,7 +15,6 @@ body { font-family: Arial,sans-serif; display:flex; flex-direction:column; align
 #voiceSelect { padding:8px; border-radius:6px; }
 #ttsSettings { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0; }
 #ttsSettings select, #ttsSettings input { padding:8px; border:1px solid #aaa; border-radius:6px; background:#fff; }
-#ttsEndpoint { min-width:260px; max-width:100%; }
 #ttsStatus { font-size:13px; color:#555; }
 .controls { display:flex; }
 button { border:none; background:transparent; cursor:pointer; padding:8px; }
@@ -73,15 +72,14 @@ button svg.stop { fill:#e74c3c; }
   </div>
 </div>
 <div id="ttsSettings">
-  <select id="ttsMode" aria-label="Способ озвучивания"><option value="local">Голоса Mac / браузера</option><option value="openai">OpenAI</option></select>
-  <select id="cloudVoice" aria-label="Голос OpenAI для русского текста" hidden>
-    <option value="marin">Marin</option><option value="cedar">Cedar</option><option value="coral">Coral</option>
-    <option value="nova">Nova</option><option value="alloy">Alloy</option><option value="ash">Ash</option>
-    <option value="ballad">Ballad</option><option value="echo">Echo</option><option value="fable">Fable</option>
-    <option value="onyx">Onyx</option><option value="sage">Sage</option><option value="shimmer">Shimmer</option><option value="verse">Verse</option>
+  <select id="ttsMode" aria-label="Способ озвучивания"><option value="local">Голоса Mac / браузера</option><option value="piper">Русские нейроголоса · бесплатно</option></select>
+  <select id="piperVoice" aria-label="Русский нейроголос" hidden>
+    <option value="ru_RU-irina-medium">Ирина</option>
+    <option value="ru_RU-denis-medium">Денис</option>
+    <option value="ru_RU-dmitri-medium">Дмитрий</option>
+    <option value="ru_RU-ruslan-medium">Руслан</option>
   </select>
   <label id="englishVoicesLabel"><input id="showEnglishVoices" type="checkbox"> Показать английские голоса</label>
-  <input id="ttsEndpoint" type="url" placeholder="URL вашего TTS Worker" aria-label="Адрес TTS Worker" hidden>
   <span id="ttsStatus" role="status" aria-live="polite"></span>
 </div>
 
@@ -98,36 +96,32 @@ button svg.stop { fill:#e74c3c; }
   const stopButton = document.getElementById('stopButton');
   const voiceSelect = document.getElementById('voiceSelect');
   const ttsMode = document.getElementById('ttsMode');
-  const cloudVoice = document.getElementById('cloudVoice');
+  const piperVoice = document.getElementById('piperVoice');
   const showEnglishVoices = document.getElementById('showEnglishVoices');
   const englishVoicesLabel = document.getElementById('englishVoicesLabel');
-  const ttsEndpoint = document.getElementById('ttsEndpoint');
   const ttsStatus = document.getElementById('ttsStatus');
   const eyeButton = document.getElementById('eyeButton');
   const clearButton = document.getElementById('clearButton');
 
-  let utterance = null, words=[], wordIndex=0, voices=[];
-  let cloudAudio=null, cloudAudioUrl=null, requestController=null;
+  let utterance = null, words=[], wordIndex=0, voices=[], spokenText='';
+  let generatedAudio=null, generatedAudioUrl=null, piperBusy=false, generationId=0, piperModulePromise=null;
   const savedVoiceKey = 'lionVoice.selectedVoice';
   ttsMode.value='local';
-  cloudVoice.value=localStorage.getItem('lionVoice.cloudVoice') || 'marin';
+  piperVoice.value=localStorage.getItem('lionVoice.piperVoice') || 'ru_RU-irina-medium';
   showEnglishVoices.checked=localStorage.getItem('lionVoice.showEnglishVoices')==='true';
-  ttsEndpoint.value=localStorage.getItem('lionVoice.ttsEndpoint') || 'https://lion-voice-tts.stas-pintea-lion-voice.workers.dev';
   function updateTtsControls(){
-    const cloud=ttsMode.value==='openai';
-    voiceSelect.hidden=cloud;
-    cloudVoice.hidden=!cloud;
-    englishVoicesLabel.hidden=cloud;
-    ttsEndpoint.hidden=!cloud;
-    ttsStatus.textContent=cloud && !ttsEndpoint.value.trim() ? 'Укажите адрес вашего TTS Worker' : '';
+    const piper=ttsMode.value==='piper';
+    voiceSelect.hidden=piper;
+    piperVoice.hidden=!piper;
+    englishVoicesLabel.hidden=piper;
+    ttsStatus.textContent=piper ? 'При первом запуске загрузится модель голоса' : '';
   }
   ttsMode.addEventListener('change',()=>{ stopSpeech(); updateTtsControls(); });
-  cloudVoice.addEventListener('change',()=>localStorage.setItem('lionVoice.cloudVoice',cloudVoice.value));
+  piperVoice.addEventListener('change',()=>{ stopSpeech(); localStorage.setItem('lionVoice.piperVoice',piperVoice.value); });
   showEnglishVoices.addEventListener('change',()=>{
     localStorage.setItem('lionVoice.showEnglishVoices',String(showEnglishVoices.checked));
     loadVoices();
   });
-  ttsEndpoint.addEventListener('change',()=>{ localStorage.setItem('lionVoice.ttsEndpoint',ttsEndpoint.value.trim()); updateTtsControls(); });
   updateTtsControls();
   const isMac = navigator.platform.toUpperCase().includes('MAC');
   let hiddenMode=true;
@@ -183,59 +177,62 @@ clearButton.addEventListener('click', () => {
 
   function stopSpeech(){
     speechSynthesis.cancel();
-    requestController?.abort(); requestController=null;
-    if(cloudAudio){ cloudAudio.pause(); cloudAudio.src=''; cloudAudio=null; }
-    if(cloudAudioUrl){ URL.revokeObjectURL(cloudAudioUrl); cloudAudioUrl=null; }
-    utterance=null; wordIndex=0; renderProgress(); updateState('stop');
+    generationId++;
+    if(generatedAudio){ generatedAudio.pause(); generatedAudio.src=''; generatedAudio=null; }
+    if(generatedAudioUrl){ URL.revokeObjectURL(generatedAudioUrl); generatedAudioUrl=null; }
+    utterance=null; wordIndex=0;
+    if(spokenText) textContainer.textContent=spokenText;
+    spokenText=''; words=[];
+    updateState('stop');
   }
 
-  async function playCloudSpeech(text){
-    const endpoint=ttsEndpoint.value.trim();
-    if(!/^https:\/\//i.test(endpoint)){
-      ttsStatus.textContent='Нужен HTTPS-адрес TTS Worker';
-      return;
-    }
+  async function playPiperSpeech(text){
+    if(piperBusy) return;
     stopSpeech();
+    spokenText=text;
     words=text.split(/\s+/); wordIndex=0; renderProgress();
-    requestController=new AbortController();
-    const currentRequest=requestController;
-    ttsStatus.textContent='Генерирую аудио…';
+    const currentGeneration=generationId;
+    piperBusy=true;
+    ttsStatus.textContent='Загружаю голос и готовлю аудио…';
     try{
-      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:cloudVoice.value}),signal:currentRequest.signal});
-      if(response.status===402) throw new Error('Баланс OpenAI API исчерпан. Пополните его в настройках API.');
-      if(!response.ok) throw new Error(`Сервис вернул ${response.status}`);
-      const audioBlob=await response.blob();
-      if(currentRequest.signal.aborted) return;
-      cloudAudioUrl=URL.createObjectURL(audioBlob);
-      cloudAudio=new Audio(cloudAudioUrl);
-      cloudAudio.ontimeupdate=()=>{
-        if(cloudAudio?.duration && Number.isFinite(cloudAudio.duration)){
-          const nextIndex=Math.min(words.length-1,Math.floor(cloudAudio.currentTime/cloudAudio.duration*words.length));
+      piperModulePromise ||= import('./assets/piper.js');
+      const piper=await piperModulePromise;
+      const audioBlob=await piper.synthesize(text,piperVoice.value,progress=>{
+        if(currentGeneration!==generationId || !progress?.total) return;
+        ttsStatus.textContent=`Загружаю голос: ${Math.round(progress.loaded/progress.total*100)}%`;
+      });
+      if(currentGeneration!==generationId) return;
+      generatedAudioUrl=URL.createObjectURL(audioBlob);
+      generatedAudio=new Audio(generatedAudioUrl);
+      generatedAudio.ontimeupdate=()=>{
+        if(generatedAudio?.duration && Number.isFinite(generatedAudio.duration)){
+          const nextIndex=Math.min(words.length-1,Math.floor(generatedAudio.currentTime/generatedAudio.duration*words.length));
           if(nextIndex!==wordIndex){ wordIndex=nextIndex; renderProgress(); }
         }
       };
-      cloudAudio.onended=()=>{ wordIndex=words.length; renderProgress(); updateState('stop'); ttsStatus.textContent=''; };
-      cloudAudio.onpause=()=>{ if(cloudAudio && !cloudAudio.ended) updateState('pause'); };
-      await cloudAudio.play();
-      updateState('play'); ttsStatus.textContent='Голос сгенерирован ИИ';
+      generatedAudio.onended=()=>{ wordIndex=words.length; renderProgress(); updateState('stop'); ttsStatus.textContent=''; };
+      generatedAudio.onpause=()=>{ if(generatedAudio && !generatedAudio.ended) updateState('pause'); };
+      await generatedAudio.play();
+      updateState('play'); ttsStatus.textContent='Голос готов · работает на вашем устройстве';
     }catch(error){
-      if(error.name!=='AbortError'){ ttsStatus.textContent=`Ошибка озвучивания: ${error.message}`; updateState('stop'); }
-    }finally{ if(requestController===currentRequest) requestController=null; }
+      if(currentGeneration===generationId){ ttsStatus.textContent=`Не удалось загрузить голос: ${error.message}`; updateState('stop'); }
+    }finally{ piperBusy=false; }
   }
 
   function playSpeech(){
     const text=textContainer.textContent.trim();
     if(!text) return;
-    if(ttsMode.value==='openai'){
-      if(cloudAudio?.paused && cloudAudio.currentTime>0 && cloudAudio.currentTime<cloudAudio.duration){ cloudAudio.play(); updateState('play'); return; }
-      playCloudSpeech(text); return;
+    if(ttsMode.value==='piper'){
+      if(generatedAudio?.paused && generatedAudio.currentTime>0 && generatedAudio.currentTime<generatedAudio.duration){ generatedAudio.play(); updateState('play'); return; }
+      playPiperSpeech(text); return;
     }
     if(voiceSelect.disabled){
-      ttsStatus.textContent='Русские голоса не найдены. Загрузите голос в macOS или выберите OpenAI.';
+      ttsStatus.textContent='Русские голоса не найдены. Загрузите голос в macOS или выберите нейроголос.';
       return;
     }
     ttsStatus.textContent='';
     stopSpeech();
+    spokenText=text;
     words=text.split(/\s+/); wordIndex=0; renderProgress();
     utterance=new SpeechSynthesisUtterance(text);
     const selectedVoice=voices[Number(voiceSelect.value)];
@@ -300,7 +297,7 @@ clearButton.addEventListener('click', () => {
   // ======================= Кнопки TTS =======================
   playButton.addEventListener('click',playSpeech);
   pauseButton.addEventListener('click',()=>{
-    if(ttsMode.value==='openai'){ cloudAudio?.pause(); return; }
+    if(ttsMode.value==='piper'){ generatedAudio?.pause(); return; }
     if(speechSynthesis.speaking){speechSynthesis.pause(); updateState('pause');}
   });
   stopButton.addEventListener('click',stopSpeech);

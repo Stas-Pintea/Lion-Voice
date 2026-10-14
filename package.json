@@ -1,0 +1,26 @@
+{
+  "name": "lion-voice",
+  "version": "1.0.0",
+  "description": "Бесплатная озвучка русского текста голосами Mac и Piper в браузере.",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/piper-entry.js --bundle --format=esm --splitting --outdir=assets --entry-names=piper --chunk-names=chunk-[hash] --target=es2022 --external:fs --external:path"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stas-Pintea/Lion-Voice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Stas-Pintea/Lion-Voice/issues"
+  },
+  "homepage": "https://github.com/Stas-Pintea/Lion-Voice#readme",
+  "devDependencies": {
+    "@mintplex-labs/piper-tts-web": "^1.0.5",
+    "esbuild": "^0.25.12",
+    "onnxruntime-web": "^1.18.0"
+  }
+}
