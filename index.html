@@ -112,7 +112,7 @@ button svg.stop { fill:#e74c3c; }
   ttsMode.value=localStorage.getItem('lionVoice.ttsMode') || 'local';
   cloudVoice.value=localStorage.getItem('lionVoice.cloudVoice') || 'marin';
   showEnglishVoices.checked=localStorage.getItem('lionVoice.showEnglishVoices')==='true';
-  ttsEndpoint.value=localStorage.getItem('lionVoice.ttsEndpoint') || '';
+  ttsEndpoint.value=localStorage.getItem('lionVoice.ttsEndpoint') || 'https://lion-voice-tts.stas-pintea-lion-voice.workers.dev';
   function updateTtsControls(){
     const cloud=ttsMode.value==='openai';
     voiceSelect.hidden=cloud;

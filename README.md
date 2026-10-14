@@ -12,7 +12,7 @@
 
 1. Установите [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) и войдите в Cloudflare: `npx wrangler login`.
 2. В папке `worker/` выполните `npx wrangler secret put OPENAI_API_KEY` и вставьте ключ OpenAI. Ключ сохраняется как секрет Worker и не попадает в репозиторий.
-3. Там же выполните `npx wrangler deploy`. Скопируйте полученный HTTPS-адрес Worker.
-4. На странице переключите способ озвучивания на OpenAI и вставьте адрес в поле «URL вашего TTS Worker».
+3. Там же выполните `npx wrangler deploy`. Адрес опубликованного Worker уже указан на странице по умолчанию: `https://lion-voice-tts.stas-pintea-lion-voice.workers.dev`.
+4. На странице переключите способ озвучивания на OpenAI.
 
 Worker разрешает запросы со страницы `https://stas-pintea.github.io` и с локального сервера на порту 8000. При другом домене обновите `ALLOWED_ORIGINS` в `worker/src/index.js`. Каждый запрос отправляет текст в OpenAI и может стоить денег. Ограничение по `Origin` защищает браузерные вызовы, но не заменяет защиту от прямых запросов к публичному Worker. Перед открытым запуском настройте лимиты расходов OpenAI и ограничение частоты запросов Cloudflare. Текущий лимит — 2000 символов за запрос. Облачный режим требует интернет; подсветка слов оценивается по длительности аудио и может не совпадать с произношением.
