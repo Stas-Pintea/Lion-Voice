@@ -28,6 +28,10 @@ export default {
       return new Response('Invalid text or voice', { status: 400, headers });
     }
 
+    const clientIp = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const { success: withinLimit } = await env.TTS_RATE_LIMIT.limit({ key: clientIp });
+    if (!withinLimit) return new Response('Too many requests', { status: 429, headers });
+
     try {
       const response = await fetch('https://api.openai.com/v1/audio/speech', {
         method: 'POST',
