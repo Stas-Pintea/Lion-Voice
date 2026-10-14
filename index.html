@@ -202,6 +202,7 @@ clearButton.addEventListener('click', () => {
     ttsStatus.textContent='Генерирую аудио…';
     try{
       const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:cloudVoice.value}),signal:currentRequest.signal});
+      if(response.status===402) throw new Error('Баланс OpenAI API исчерпан. Пополните его в настройках API.');
       if(!response.ok) throw new Error(`Сервис вернул ${response.status}`);
       const audioBlob=await response.blob();
       if(currentRequest.signal.aborted) return;

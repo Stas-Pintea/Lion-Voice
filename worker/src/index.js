@@ -38,7 +38,15 @@ export default {
         headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: 'gpt-4o-mini-tts', voice, input: text, response_format: 'mp3' }),
       });
-      if (!response.ok) return new Response('Speech generation failed', { status: 502, headers });
+      if (!response.ok) {
+        const details = await response.json().catch(() => null);
+        const code = typeof details?.error?.code === 'string' ? details.error.code : '';
+        console.error('OpenAI speech request failed', response.status, code);
+        if (code === 'credit_balance_exhausted') {
+          return new Response('OpenAI API balance exhausted', { status: 402, headers });
+        }
+        return new Response(`Speech generation failed (${response.status}${code ? `: ${code}` : ''})`, { status: 502, headers });
+      }
       return new Response(response.body, {
         headers: { ...headers, 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' },
       });
